@@ -49,7 +49,7 @@ public class ConsolaIO {
     }
 
     public String leerCorreo(String mensaje) {
-        return leer(mensaje, t -> t.contains("@"),
+        return leer(mensaje, t -> t.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"),
                 "Correo invalido");
     }
 
