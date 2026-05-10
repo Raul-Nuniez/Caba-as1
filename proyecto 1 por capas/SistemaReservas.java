@@ -41,9 +41,12 @@ public class SistemaReservas {
         Cabana cabana = buscarCabana(idCabana);
         if (cabana == null) throw new IllegalArgumentException("Cabana no encontrada");
 
+        // Validar datos del cliente con reglas robustas y reutilizar datos normalizados
+        Cliente cliente = new Cliente(nombre, telefono, correo);
+
         // Crear la reserva con un folio único e incrementar el contador
-        Reserva r = new Reserva(siguienteFolio++, cabana, nombre, telefono,
-                                correo, noches, metodoPago, ultimos4);
+        Reserva r = new Reserva(siguienteFolio++, cabana, cliente.getNombreCompleto(), cliente.getTelefono(),
+                                cliente.getCorreo(), noches, metodoPago, ultimos4);
         reservas.add(r);
         return r;
     }
