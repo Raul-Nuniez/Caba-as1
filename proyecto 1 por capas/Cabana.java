@@ -12,18 +12,21 @@ public class Cabana {
     // Precio en pesos por cada noche de hospedaje
     private double precioPorNoche;
 
+    /**
+     * Crea una cabaña con sus datos base.
+     */
     public Cabana(int id, String nombre, double precioPorNoche) {
         this.id = id;
         this.nombre = nombre;
-    // Getters - métodos para acceder a los datos
         this.precioPorNoche = precioPorNoche;
     }
 
+    // Getters - métodos para acceder a los datos
     public int getId() { return id; }
     public String getNombre() { return nombre; }
     public double getPrecioPorNoche() { return precioPorNoche; }
-// Formato para mostrar la cabaña en listas
-    
+
+    // Formato para mostrar la cabaña en listas
     @Override
     public String toString() {
         return id + ". " + nombre + " - $" + precioPorNoche + " por noche";
