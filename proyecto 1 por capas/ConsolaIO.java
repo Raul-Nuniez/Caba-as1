@@ -1,7 +1,7 @@
 // presentation/ConsolaIO.java
 /**
- * UTILIDAD DE ENTRADA/SALIDA - Validación y lectura desde consola
- * Propósito: Centralizar la validación de datos, eliminando lógica repetitiva
+ * UTILIDAD DE ENTRADA/SALIDA - Lectura con validación básica desde consola
+ * Propósito: Mejorar la experiencia en consola sin reemplazar validaciones de negocio.
  * Cada método leer* solicita entrada, la valida, y permite al usuario escribir "cancelar" para abortar
  */
 import java.util.Scanner;

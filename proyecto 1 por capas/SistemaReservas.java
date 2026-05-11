@@ -2,10 +2,10 @@
 /**
  * CAPA DE APLICACION (LOGICA DE NEGOCIO) - Control central del sistema de reservas
  * Responsabilidades:
- * - Gestionar cabañas guradadas en catalogo
+ * - Gestionar cabañas guardadas en catálogo
  * - Crear nuevas reservas
  * - Cancelar reservas
- * - Generar reportes (reservas activas, ranking)
+ * - Generar reportes y consultas (reservas, ranking)
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +33,42 @@ public class SistemaReservas {
         return catalogo.listar();
     }
 
-    // Crea una nueva reserva si la cabaña existe
-    // Genera un folio único automáticamente
+    /**
+     * Crea una nueva reserva validando todas las reglas de negocio.
+     */
     public Reserva reservar(int idCabana, String nombre, String telefono,
                             String correo, int noches, String metodoPago, String ultimos4) {
-        // Verificar que la cabaña exista
         Cabana cabana = buscarCabana(idCabana);
-        if (cabana == null) throw new IllegalArgumentException("Cabana no encontrada");
+        if (cabana == null) throw new IllegalArgumentException("La cabaña no existe");
 
-        // Crear la reserva con un folio único e incrementar el contador
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre del cliente no puede estar vacío");
+        }
+
+        if (telefono == null || !telefono.matches("\\d{10}")) {
+            throw new IllegalArgumentException("El teléfono debe tener exactamente 10 dígitos");
+        }
+
+        if (correo == null || !correo.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+            throw new IllegalArgumentException("El correo no tiene un formato válido");
+        }
+
+        if (noches <= 0) {
+            throw new IllegalArgumentException("La cantidad de noches debe ser mayor que cero");
+        }
+
+        if (!"Efectivo".equals(metodoPago) && !"Tarjeta".equals(metodoPago)) {
+            throw new IllegalArgumentException("El método de pago debe ser Efectivo o Tarjeta");
+        }
+
+        if ("Tarjeta".equals(metodoPago)) {
+            if (ultimos4 == null || !ultimos4.matches("\\d{4}")) {
+                throw new IllegalArgumentException("Para pago con tarjeta, los últimos 4 dígitos son obligatorios y deben tener 4 números");
+            }
+        } else if (ultimos4 != null) {
+            throw new IllegalArgumentException("Para pago en efectivo no deben enviarse últimos 4 dígitos");
+        }
+
         Reserva r = new Reserva(siguienteFolio++, cabana, nombre, telefono,
                                 correo, noches, metodoPago, ultimos4);
         reservas.add(r);
@@ -55,7 +82,16 @@ public class SistemaReservas {
         r.cancelar();
     }
 
-    // Retorna lista de todas las reservas activas (no canceladas)
+    /**
+     * Retorna todas las reservas (activas y canceladas).
+     */
+    public List<Reserva> verReservas() {
+        return new ArrayList<>(reservas);
+    }
+
+    /**
+     * Retorna lista de reservas activas (no canceladas).
+     */
     public List<Reserva> verReservasActivas() {
         List<Reserva> activas = new ArrayList<>();
         for (Reserva r : reservas) 
@@ -68,21 +104,21 @@ public class SistemaReservas {
         return catalogo.buscarPorPrecio(min, max);
     }
 
-    /* Genera ranking de cabañas ordenadas por cantidad de reservas
-       Muestra cuál es la más solicitada*/
+    /**
+     * Genera el ranking de cabañas contando solo reservas activas.
+     */
     public List<String> ranking() {
         List<String> lista = new ArrayList<>();
-        // Para cada cabaña, contar cuántas reservas tiene
         for (Cabana c : catalogo.listar()) {
             int count = 0;
             for (Reserva r : reservas)
-                if (r.getCabana().getId() == c.getId()) count++;
+                if (r.estaActiva() && r.getCabana().getId() == c.getId()) count++;
             lista.add(c.getNombre() + ": " + count + " reservas");
         }
         return lista;
     }
 
-        // Busca una cabaña en el catálogo por su ID
+    // Busca una cabaña en el catálogo por su ID
     private Cabana buscarCabana(int id) {
         return catalogo.buscarPorId(id);
     }
