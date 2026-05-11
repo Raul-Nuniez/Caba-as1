@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SistemaReservas {
+    private static final String EMAIL_REGEX = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
     private static final String METODO_PAGO_EFECTIVO = "Efectivo";
     private static final String METODO_PAGO_TARJETA = "Tarjeta";
 
@@ -51,7 +52,7 @@ public class SistemaReservas {
             throw new IllegalArgumentException("El teléfono debe tener exactamente 10 dígitos");
         }
 
-        if (correo == null || !correo.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+        if (correo == null || !correo.matches(EMAIL_REGEX)) {
             throw new IllegalArgumentException("El correo no tiene un formato válido");
         }
 
