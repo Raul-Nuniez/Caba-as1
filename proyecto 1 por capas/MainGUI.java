@@ -229,8 +229,8 @@ public class MainGUI {
         private final JTextField txtTelefono = new JTextField(20);
         private final JTextField txtCorreo = new JTextField(20);
         private final JTextField txtNoches = new JTextField(20);
-        private final JRadioButton rbEfectivo = new JRadioButton("Efectivo", true);
-        private final JRadioButton rbTarjeta = new JRadioButton("Tarjeta");
+        private final JRadioButton rbEfectivo = crearRadio("Efectivo", true, "Método de pago: Efectivo");
+        private final JRadioButton rbTarjeta = crearRadio("Tarjeta", false, "Método de pago: Tarjeta");
         private final JTextField txtUltimos4 = new JTextField(8);
 
         NuevaReservaDialog(Frame owner, SistemaReservas sistema, Runnable onSuccess) {
@@ -318,8 +318,8 @@ public class MainGUI {
 
         private void guardarReserva() {
             try {
-                Cabana cabana = (Cabana) comboCabana.getSelectedItem();
-                if (cabana == null) {
+                Object seleccion = comboCabana.getSelectedItem();
+                if (!(seleccion instanceof Cabana cabana)) {
                     throw new IllegalArgumentException("Debe seleccionar una cabaña.");
                 }
 
@@ -344,6 +344,12 @@ public class MainGUI {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
+        }
+
+        private static JRadioButton crearRadio(String texto, boolean seleccionado, String nombreAccesible) {
+            JRadioButton radio = new JRadioButton(texto, seleccionado);
+            radio.getAccessibleContext().setAccessibleName(nombreAccesible);
+            return radio;
         }
     }
 }
