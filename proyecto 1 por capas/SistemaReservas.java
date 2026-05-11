@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SistemaReservas {
+    private static final String METODO_PAGO_EFECTIVO = "Efectivo";
+    private static final String METODO_PAGO_TARJETA = "Tarjeta";
 
     // Catálogo de cabañas disponibles
     private CatalogoAlojamientos catalogo;
@@ -57,11 +59,11 @@ public class SistemaReservas {
             throw new IllegalArgumentException("La cantidad de noches debe ser mayor que cero");
         }
 
-        if (!"Efectivo".equals(metodoPago) && !"Tarjeta".equals(metodoPago)) {
+        if (!METODO_PAGO_EFECTIVO.equals(metodoPago) && !METODO_PAGO_TARJETA.equals(metodoPago)) {
             throw new IllegalArgumentException("El método de pago debe ser Efectivo o Tarjeta");
         }
 
-        if ("Tarjeta".equals(metodoPago)) {
+        if (METODO_PAGO_TARJETA.equals(metodoPago)) {
             if (ultimos4 == null || !ultimos4.matches("\\d{4}")) {
                 throw new IllegalArgumentException("Para pago con tarjeta, los últimos 4 dígitos son obligatorios y deben tener 4 números");
             }
